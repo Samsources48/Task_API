@@ -1,0 +1,6 @@
+@Plant_HexArquitecture_API_HostAddress = http://localhost:5253
+
+GET {{Plant_HexArquitecture_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
