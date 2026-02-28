@@ -23,7 +23,7 @@ namespace Infrastructure.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("id", user.IdUser.ToString())
+                new Claim("IdUser", user.IdUser.ToString())
             };
 
             foreach (var role in user.Roles)
