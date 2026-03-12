@@ -15,6 +15,15 @@ namespace Api.Controllers.Catalogos
         private readonly ILogger<TasksController> _logger = logger;
         private readonly ITasksOperation _tasksOperation = tasksOperation;
 
+        [HttpGet("Dashboard")]
+        [ProducesResponseType(typeof(TaskDashboard), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<TaskDashboard>> GetTaskDasboard()
+        {
+            var data = await _tasksOperation.GetTaskDasboard();
+            return Ok(data);
+        }
+
         [HttpGet()]
         [ProducesResponseType(typeof(List<TasksDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]

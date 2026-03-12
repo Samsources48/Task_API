@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Entities.Tasks;
+using Domain.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,13 @@ namespace Application.Features.Mappings
                 IdTaskItem = entity.IdTaskItem,
                 Title = entity.Title,
                 Description = entity.Description,
-                Priority = entity.Priority,
-                Status = entity.Status,
+                Priority = HelperEnumsConverter.stringPriorityEnum(entity.Priority),
+                Status = HelperEnumsConverter.stringToStatusTasksEnum(entity.Status),
                 DueData = entity.DueData,
                 IsCompleted = entity.IsCompleted,
                 IdUser = entity.User?.IdUser ?? 0,
-                UserName = entity.User?.UserName ?? string.Empty
+                UserName = entity.User?.UserName ?? string.Empty,
+                Activo = entity.Activo
             };
         }
 
@@ -37,10 +39,11 @@ namespace Application.Features.Mappings
                 Title = dto.Title,
                 Description = dto.Description,
                 IsCompleted = false,
-                Priority = dto.Priority,
-                Status = dto.Status,
+                Status = HelperEnumsConverter.statusTasksToString(dto.Status),
+                Priority = HelperEnumsConverter.priorityToString(dto.Priority),
                 DueData = dto.DueData,
-                IdUser = dto.IdUser
+                IdUser = dto.IdUser,
+                Activo = true
             };
         }
 

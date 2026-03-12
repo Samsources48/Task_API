@@ -2,16 +2,30 @@
 using Application.Exceptions;
 using Application.Features.Mappings;
 using Application.Features.Products.Interfaces;
+using Domain.Entities.seguridad;
+using Domain.Enums;
 using Domain.Interfaces.Tasks;
+using Domain.utils;
+using System.Security.AccessControl;
 
 namespace Application.Features.Products.Operations
 {
     public class TasksOperation(ITaskItemRepository taskRepository) : ITasksOperation
     {
+        public async Task<TaskDashboard> GetTaskDasboard()
+        {
+            var response = await taskRepository.GetAllAsync(x => x.Activo);
+            return new TaskDashboard
+            {
+                TotalTasks = response.Count(),
+                CompletedTasks = response.Count(x => x.IsCompleted == true),
+                InProgressTasks = response.Count(x => x.IsCompleted == false),
+            };
+        }
 
         public async Task<List<TasksDto>> GetAll()
         {
-            var response = await taskRepository.GetAllAsync();
+            var response = await taskRepository.GetAllAsync(x => x.Activo, x => x.User);
             return TasksMapper.Map(response);
         }
 
@@ -28,7 +42,10 @@ namespace Application.Features.Products.Operations
             if (dto == null)
                 throw new BadRequestException("El objeto Task no puede ser nulo");
 
+            var isCompleteTask = dto.Status == statusTasksEnum.Done;
+
             var producto = TasksMapper.toEntity(dto);
+            producto.IsCompleted = isCompleteTask;
 
             var created = await taskRepository.CreateAsync(producto);
 
@@ -46,8 +63,13 @@ namespace Application.Features.Products.Operations
             if (existing == null)
                 throw new NotFoundException($"Task con ID {dto.IdTaskItem} no encontrado");
 
+            var isCompleteTask = dto.Status == statusTasksEnum.Done;
+
             var updatedEntity = TasksMapper.toEntity(dto);
-            var updated = await taskRepository.UpdateAsync(updatedEntity);
+            updatedEntity.IdTaskItem = dto.IdTaskItem.Value;
+            updatedEntity.IsCompleted = isCompleteTask;
+
+            var updated = await taskRepository.UpdateAsync(existing.IdTaskItem, updatedEntity);
 
             if (updated == null)
                 throw new BadRequestException("No se pudo actualizar el producto");
