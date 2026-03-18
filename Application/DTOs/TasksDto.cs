@@ -20,7 +20,9 @@ namespace Application.DTOs
         public string? Description { get; set; }
         public priorityEnum Priority { get; set; }
         public statusTasksEnum Status { get; set; }
-        public DateTime? DueData { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public long? IdTaskCategory { get; set; }
         public bool IsCompleted { get; set; } = false;
         public long IdUser { get; set; }
         public string UserName { get; set; } = string.Empty;
@@ -33,7 +35,9 @@ namespace Application.DTOs
         public string? Description { get; set; }
         public priorityEnum Priority { get; set; }
         public statusTasksEnum Status { get; set; }
-        public DateTime? DueData { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public long? IdTaskCategory { get; set; }
         public bool? IsCompleted { get; set; }
         public long IdUser { get; set; }
     }

@@ -22,7 +22,8 @@ namespace Application.Features.Mappings
                 Description = entity.Description,
                 Priority = HelperEnumsConverter.stringPriorityEnum(entity.Priority),
                 Status = HelperEnumsConverter.stringToStatusTasksEnum(entity.Status),
-                DueData = entity.DueData,
+                StartDate = entity.StartDate,
+                EndDate = entity.EndDate,
                 IsCompleted = entity.IsCompleted,
                 IdUser = entity.User?.IdUser ?? 0,
                 UserName = entity.User?.UserName ?? string.Empty,
@@ -41,7 +42,8 @@ namespace Application.Features.Mappings
                 IsCompleted = false,
                 Status = HelperEnumsConverter.statusTasksToString(dto.Status),
                 Priority = HelperEnumsConverter.priorityToString(dto.Priority),
-                DueData = dto.DueData,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
                 IdUser = dto.IdUser,
                 Activo = true
             };

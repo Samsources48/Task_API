@@ -1,6 +1,7 @@
 using Domain.Entities.Base;
 using Domain.Entities.seguridad;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,7 +20,12 @@ namespace Domain.Entities.Tasks
         public string Priority { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public bool IsCompleted { get; set; } = false;
-        public DateTime? DueData { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
+        [ForeignKey(nameof(TaskCategory))]
+        public long? IdTaskCategory { get; set; }
+        public virtual TaskCategory? TaskCategory { get; set; }
 
         [ForeignKey(nameof(User))]
         public long IdUser { get; set; }
