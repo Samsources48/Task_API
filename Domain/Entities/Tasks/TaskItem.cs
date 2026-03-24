@@ -22,6 +22,7 @@ namespace Domain.Entities.Tasks
         public bool IsCompleted { get; set; } = false;
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public bool IsNotified { get; set; } = false;
 
         [ForeignKey(nameof(TaskCategory))]
         public long? IdTaskCategory { get; set; }

@@ -1,11 +1,16 @@
 using Application.Exceptions;
 using Application.Extensions;
 using Domain;
+using Hangfire;
 using Infrastructure;
+using Infrastructure.BackGroundJobs;
+using Infrastructure.Configuration.Hangfire;
 using Infrastructure.Seeders;
+using Infrastructure.Services.Notification.Email;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Plant_HexArquitecture_API.Middlewares;
 using Scalar.AspNetCore;
 using Serilog;
@@ -113,7 +118,25 @@ try
         }
     }
 
+    //HANGFIRE
+    var hangfireSettings = app.Services.GetRequiredService<IOptions<HangfireSettings>>().Value;
 
+    if (hangfireSettings.EnableDashboard)
+    {
+        app.UseHangfireDashboard(hangfireSettings.DashboardPath, new DashboardOptions
+        {
+            // Sin autenticación para desarrollo
+            // En producción, agregar: Authorization = new[] { new HangfireAuthFilter() }
+            DashboardTitle = "Tracking RPA - Background Jobs",
+            DisplayStorageConnectionString = false
+        });
+
+        Log.Information("📊 Hangfire Dashboard habilitado en: {Path}", hangfireSettings.DashboardPath);
+    }
+    // Registrar RecurringJobs después de que la app esté configurada
+    HangFireJobSetup.ConfigureHangFireJobs(app.Services);
+
+    Log.Information("[:----- Jobs recurrentes configurados -----:]");
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -130,9 +153,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-
     app.Run();
-
 }
 catch(Exception ex)
 {

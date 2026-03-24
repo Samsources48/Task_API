@@ -32,14 +32,14 @@ namespace Infrastructure.Seeders
             }
 
             // 2. Seed Admin User
-            if (!await context.Users.AnyAsync(u => u.UserName == "admin"))
+            if (!await context.Users.AnyAsync(u => u.UserName == "samuelpachayhf@gmail.com"))
             {
                 var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.RoleName == "Admin");
                 if (adminRole != null)
                 {
                     var adminUser = new User
                     {
-                        UserName = "admin",
+                        UserName = "samuelpachayhf@gmail.com",
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
                         GuidUser = Guid.NewGuid().ToString(),
                         Activo = true,

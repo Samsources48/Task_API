@@ -2,10 +2,13 @@
 using Application.Exceptions;
 using Application.Features.Mappings;
 using Application.Features.Products.Interfaces;
+using Domain;
 using Domain.Entities.seguridad;
 using Domain.Enums;
 using Domain.Interfaces.Tasks;
 using Domain.utils;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Security.AccessControl;
 
 namespace Application.Features.Products.Operations
