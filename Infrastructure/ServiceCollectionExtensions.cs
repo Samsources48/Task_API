@@ -27,6 +27,8 @@ namespace Infrastructure
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddMemoryCache();
+
 
             //Configurar opciones de Hangfire desde appsettings.json
             services.Configure<HangfireSettings>(
@@ -65,7 +67,8 @@ namespace Infrastructure
 
 
             // Services
-            services.AddScoped<IJwtService, JwtService>();
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 
             // Email Notification Services
             services.Configure<EmailSettings>(
@@ -74,10 +77,9 @@ namespace Infrastructure
             services.AddScoped<IEmailNotificationService, EmailNotificationService>();
             services.AddScoped<IExcelReportGenerator, ExcelReportGenerator>();
 
-            // JWT Configuration
-            var jwtKey = configuration["Jwt:Key"];
-            var jwtIssuer = configuration["Jwt:Issuer"];
-            var jwtAudience = "localhost";
+            // Clerk Configuration
+            var clerkAuthority = configuration["Clerk:Authority"];
+            var clerkAudience = configuration["Clerk:Audience"];
 
             services.AddAuthentication(options =>
             {
@@ -86,15 +88,14 @@ namespace Infrastructure
             })
             .AddJwtBearer(options =>
             {
+                options.Authority = clerkAuthority;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
+                    ValidIssuer = clerkAuthority,
                     ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtIssuer,
-                    ValidAudience = jwtAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+                    ValidAudience = clerkAudience,
+                    ValidateLifetime = true
                 };
             });
 

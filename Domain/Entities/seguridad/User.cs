@@ -18,7 +18,12 @@ namespace Domain.Entities.seguridad
         public string UserName { get; set; } = string.Empty;
 
         [Required]
-        public string PasswordHash { get; set; } = string.Empty;
+        [StringLength(150)]
+        public string ClerkId { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(255)]
+        public string Email { get; set; } = string.Empty;
 
         [StringLength(100)]
         public string? GuidUser { get; set; } = string.Empty;

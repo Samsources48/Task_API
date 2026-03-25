@@ -63,7 +63,7 @@ namespace Infrastructure.Services.Notification.Email
                 </div>";
 
                 await _emailSender.SendEmailAsync(
-                    subject: $"⚠️ Tarea próxima a vencer: {taskTitle}",
+                    subject: $" Tarea próxima a vencer: {taskTitle}",
                     htmlBody: htmlBody,
                     recipients: new[] { recipientEmail },
                     ct: ct);

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Plant_HexArquitecture_API.Middlewares;
+using Api.Middlewares;
 using Scalar.AspNetCore;
 using Serilog;
 using System.Reflection;
@@ -151,6 +152,7 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthentication();
+    app.UseMiddleware<SyncUserMiddleware>();
     app.UseAuthorization();
     app.MapControllers();
     app.Run();

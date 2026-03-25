@@ -32,7 +32,7 @@ namespace Application.Features.Seguridad.Operations
                 throw new ConflictException("El nombre de usuario ya existe");
 
             var user = SeguridadMapper.ToEntity(dto);
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            // Password management is now delegated to Clerk
             user.GuidUser = Guid.NewGuid().ToString();
 
             if (dto.IdRoles is not null && dto.IdRoles.Any())

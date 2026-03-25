@@ -17,6 +17,10 @@ namespace Domain
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
+                .HasIndex(u => u.ClerkId)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
                 .HasMany(u => u.Roles)
                 .WithMany(r => r.Users)
                 .UsingEntity<Dictionary<string, object>>(

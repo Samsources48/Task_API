@@ -14,9 +14,9 @@ namespace Application.Extensions
     {
         public static IServiceCollection AddServicesLayer(this IServiceCollection services)
         {
-            services.AddScoped<IAuthOperation, AuthOperation>();
             services.AddScoped<IUsuariosOperation, UsuariosOperation>();
             services.AddScoped<IRolesOperation, RolesOperation>();
+            services.AddScoped<IUserSyncService, UserSyncService>();
             services.AddScoped<ITasksOperation, TasksOperation>();    
             services.AddScoped<ITaskCategoryOperation, TaskCategoryOperation>();
 

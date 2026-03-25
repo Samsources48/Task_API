@@ -14,5 +14,12 @@ namespace Domain.Repository.Seguridad
                 .Include(u => u.Roles)
                 .FirstOrDefaultAsync(u => u.UserName == username);
         }
+
+        public async Task<User?> GetByClerkIdAsync(string clerkId)
+        {
+            return await sqlDbContext.Users
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.ClerkId == clerkId);
+        }
     }
 }

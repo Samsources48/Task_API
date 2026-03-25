@@ -40,7 +40,8 @@ namespace Infrastructure.Seeders
                     var adminUser = new User
                     {
                         UserName = "samuelpachayhf@gmail.com",
-                        PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                        Email = "samuelpachayhf@gmail.com",
+                        ClerkId = "seed_admin_clerk_id",
                         GuidUser = Guid.NewGuid().ToString(),
                         Activo = true,
                         FechaRegistro = DateTime.Now,

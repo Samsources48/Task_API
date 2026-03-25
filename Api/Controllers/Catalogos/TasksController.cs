@@ -12,8 +12,6 @@ namespace Api.Controllers.Catalogos
     [Produces("application/json")]
     public class TasksController(ILogger<TasksController> _logger, ITasksOperation _tasksOperation) : ControllerBase
     {
-        //private readonly ILogger<TasksController> _logger = logger;
-        //private readonly ITasksOperation _tasksOperation = tasksOperation;
 
         [HttpGet("Dashboard")]
         [ProducesResponseType(typeof(TaskDashboard), (int)HttpStatusCode.OK)]
