@@ -22,6 +22,12 @@ namespace Plant_HexArquitecture_API.Controllers.Seguridad
             return Ok(await usuariosOperation.GetById(id));
         }
 
+        [HttpGet("clerk")]
+        public async Task<ActionResult<UserDto>> GetByIdCLerk([FromQuery] string idClerk)
+        {
+            return Ok(await usuariosOperation.GetByIdCLerk(idClerk));
+        }
+
         [HttpPost]
         public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserDto dto)
         {

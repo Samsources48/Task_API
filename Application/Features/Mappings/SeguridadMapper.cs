@@ -13,6 +13,8 @@ namespace Application.Features.Mappings
             {
                 IdUser = entity.IdUser,
                 UserName = entity.UserName,
+                ClerkId = entity.ClerkId,
+                Email = entity.Email,
                 GuidUser = entity.GuidUser,
                 Activo = entity.Activo,
                 Roles = entity.Roles.Select(r => r.RoleName).ToList(),

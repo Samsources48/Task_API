@@ -11,7 +11,7 @@ public class UserSyncService(IUserRepository userRepository, ILogger<UserSyncSer
     {
         var user = await userRepository.GetByClerkIdAsync(clerkId);
 
-        if (user == null)
+        if (user is null)
         {
             logger.LogInformation("Creating new shadow user for Clerk ID: {ClerkId}", clerkId);
             
@@ -30,7 +30,6 @@ public class UserSyncService(IUserRepository userRepository, ILogger<UserSyncSer
         }
         else if (user.Email != email || user.UserName != userName)
         {
-            // Update profile if changed
             user.Email = email;
             user.UserName = userName;
             user.FechaModificacion = DateTime.UtcNow;

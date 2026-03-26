@@ -25,6 +25,13 @@ namespace Application.Features.Seguridad.Operations
             return SeguridadMapper.ToDto(user);
         }
 
+        public async Task<UserDto> GetByIdCLerk(string idClerk)
+        {
+            var user = await userRepository.Queryable.FirstOrDefaultAsync(x => x.ClerkId == idClerk)
+                            ?? throw new NotFoundException($"Usuario con IdClerk {idClerk} no encontrado");
+            return SeguridadMapper.ToDto(user);
+        }
+
         public async Task<UserDto> Create(CreateUserDto dto)
         {
             var existing = await userRepository.GetByUsernameAsync(dto.UserName);
