@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+using Application.DTOs;
 using Application.Features.Products.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using System.Net;
 
 namespace Api.Controllers.Catalogos
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]

@@ -13,7 +13,8 @@ public class SyncUserMiddleware(RequestDelegate next)
     {
         if (context.User.Identity?.IsAuthenticated == true)
         {
-            var clerkId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var clerkId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                          context.User.FindFirst("sub")?.Value;
             if (!string.IsNullOrEmpty(clerkId))
             {
                 var cacheKey = $"clerk_id_mapping_{clerkId}";

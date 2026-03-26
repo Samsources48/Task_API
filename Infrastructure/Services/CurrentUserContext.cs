@@ -18,7 +18,8 @@ public class CurrentUserContext(IHttpContextAccessor httpContextAccessor) : ICur
 
     public string GetCurrentClerkId()
     {
-        var claim = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+        var claim = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier) ??
+                    httpContextAccessor.HttpContext?.User?.FindFirst("sub");
         return claim?.Value ?? string.Empty;
     }
 }
