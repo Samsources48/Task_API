@@ -1,3 +1,4 @@
+using Application.Features.Notifications.Interfaces;
 using Application.Features.Seguridad.Interfaces;
 using Domain;
 using Hangfire;
@@ -8,6 +9,7 @@ using Infrastructure.Configuration.Hangfire;
 using Infrastructure.Services;
 using Infrastructure.Services.Notification.Email;
 using Infrastructure.Services.Notification.Reports;
+using Infrastructure.Services.NotificationSignal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +82,7 @@ namespace Infrastructure
 
             // SignalR
             services.AddSignalR();
+            services.AddScoped<IRealTimeNotifier, SignalRNotificationService>();    
 
             // Clerk Configuration
             var clerkAuthority = configuration["Clerk:Authority"];

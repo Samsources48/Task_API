@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using Application.Features.Notifications.DTOs;
+using Application.Features.Notifications.Interfaces;
+using Domain;
 using Domain.Interfaces.Tasks;
 using Infrastructure.Services.Notification.Email;
 using Microsoft.EntityFrameworkCore;
@@ -12,21 +14,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.BackGroundJobs.Jobs
 {
-    public class NotifyExpiringTasksJob: INotifyExpiringTasksJob
+    public class NotifyExpiringTasksJob(
+        ITaskItemRepository _context,
+        IEmailNotificationService _emailNotificationService,
+        IRealTimeNotifier _realTimeNotifier,
+        ILogger<NotifyExpiringTasksJob> _logger
+        ) : INotifyExpiringTasksJob
     {
-        private readonly ITaskItemRepository _context;
-        private readonly IEmailNotificationService _emailNotificationService;
-        private readonly ILogger<NotifyExpiringTasksJob> _logger;
-
-        public NotifyExpiringTasksJob(
-            ITaskItemRepository context,
-            IEmailNotificationService emailNotificationService,
-            ILogger<NotifyExpiringTasksJob> logger)
-        {
-            _context = context;
-            _emailNotificationService = emailNotificationService;
-            _logger = logger;
-        }
+ 
         public async Task ExecuteAsync(CancellationToken ct = default)
         {
             _logger.LogInformation("Iniciando ejecución del Job de notificación de tareas por vencer...");
@@ -60,7 +55,19 @@ namespace Infrastructure.BackGroundJobs.Jobs
                     continue;
                 }
 
-                await _emailNotificationService.NotifyExpiringTaskAsync(email,task.User?.UserName ?? "Usuario",task.Title,task.EndDate,ct);
+                await _emailNotificationService.NotifyExpiringTaskAsync(email, task.User?.UserName ?? "Usuario", task.Title, task.EndDate, ct);
+
+                // Notificación en tiempo real via SignalR
+                if (!string.IsNullOrEmpty(task.User?.ClerkId))
+                {
+                    await _realTimeNotifier.NotifyUserAsync(task.User.ClerkId, new NotificationDto
+                    {
+                        Title = "Tarea próxima a vencer",
+                        Message = $"La tarea \"{task.Title}\" vence el {task.EndDate:dd/MM/yyyy HH:mm}",
+                        Type = "task_expiring",
+                        TaskId = task.IdTaskItem
+                    }, ct);
+                }
 
                 task.IsNotified = true;
             }

@@ -2,19 +2,12 @@ using Api.Hubs;
 using Application.Features.Notifications.DTOs;
 using Application.Features.Notifications.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
-namespace Api.Services;
+namespace Infrastructure.Services.NotificationSignal;
 
-public class SignalRNotificationService : IRealTimeNotifier
+public class SignalRNotificationService(IHubContext<NotificationHub, INotificationHub> _hubContext, ILogger<SignalRNotificationService> _logger) : IRealTimeNotifier
 {
-    private readonly IHubContext<NotificationHub, INotificationHub> _hubContext;
-    private readonly ILogger<SignalRNotificationService> _logger;
-
-    public SignalRNotificationService(IHubContext<NotificationHub, INotificationHub> hubContext, ILogger<SignalRNotificationService> logger)
-    {
-        _hubContext = hubContext;
-        _logger = logger;
-    }
 
     public async Task NotifyUserAsync(string clerkId, NotificationDto notification, CancellationToken ct = default)
     {

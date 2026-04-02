@@ -1,6 +1,8 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
 using Application.Features.Mappings;
+using Application.Features.Notifications.DTOs;
+using Application.Features.Notifications.Interfaces;
 using Application.Features.Products.Interfaces;
 using Domain;
 using Domain.Entities.seguridad;
@@ -13,7 +15,7 @@ using System.Security.AccessControl;
 
 namespace Application.Features.Products.Operations
 {
-    public class TasksOperation(ITaskItemRepository taskRepository) : ITasksOperation
+    public class TasksOperation(ITaskItemRepository taskRepository, IRealTimeNotifier realTimeNotifier) : ITasksOperation
     {
         public async Task<TaskDashboard> GetTaskDasboard()
         {
@@ -60,11 +62,8 @@ namespace Application.Features.Products.Operations
 
         public async Task<TasksDto> Update(SaveTasksDto dto)
         {
-            var existing = await taskRepository.GetByIdAsync(dto.IdTaskItem.Value)
+            var existing = await taskRepository.GetByIdAsync(dto.IdTaskItem.Value, x => x.User!)
                             ?? throw new NotFoundException("Tarea no Encontrada");
-
-            if (existing == null)
-                throw new NotFoundException($"Task con ID {dto.IdTaskItem} no encontrado");
 
             var isCompleteTask = dto.Status == statusTasksEnum.Done;
 
@@ -72,10 +71,25 @@ namespace Application.Features.Products.Operations
             updatedEntity.IdTaskItem = dto.IdTaskItem.Value;
             updatedEntity.IsCompleted = isCompleteTask;
 
+            var statusChanged = existing.Status != updatedEntity.Status;
+
             var updated = await taskRepository.UpdateAsync(existing.IdTaskItem, updatedEntity);
 
             if (updated == null)
-                throw new BadRequestException("No se pudo actualizar el producto");
+                throw new NotFoundException($"Task con ID {dto.IdTaskItem} no encontrado");
+
+            // Notificar cambio de estado en tiempo real
+            if (statusChanged && existing.User?.ClerkId != null)
+            {
+                await realTimeNotifier.NotifyUserAsync(existing.User.ClerkId, new NotificationDto
+                {
+                    Title = "Estado de tarea actualizado",
+                    Message = $"La tarea \"{updated.Title}\" cambió a estado: {updated.Status}",
+                    Type = "task_status_changed",
+                    TaskId = updated.IdTaskItem
+                });
+            }
+
             return TasksMapper.toDto(updated);
         }
 

@@ -15,11 +15,11 @@ using Plant_HexArquitecture_API.Middlewares;
 using Api.Middlewares;
 using Scalar.AspNetCore;
 using Api.Hubs;
-using Api.Services;
 using Application.Features.Notifications.Interfaces;
 using Serilog;
 using System.Reflection;
 using System.Text.Json;
+using Infrastructure.Services.NotificationSignal;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
