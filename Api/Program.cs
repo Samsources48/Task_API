@@ -14,6 +14,9 @@ using Microsoft.Extensions.Options;
 using Plant_HexArquitecture_API.Middlewares;
 using Api.Middlewares;
 using Scalar.AspNetCore;
+using Api.Hubs;
+using Api.Services;
+using Application.Features.Notifications.Interfaces;
 using Serilog;
 using System.Reflection;
 using System.Text.Json;
@@ -70,6 +73,7 @@ try
 
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddServicesLayer();
+    builder.Services.AddScoped<IRealTimeNotifier, SignalRNotificationService>();
 
 
     builder.Services.AddCors(opc =>
@@ -153,8 +157,10 @@ try
 
     app.UseAuthentication();
     app.UseMiddleware<SyncUserMiddleware>();
+    app.UseCors();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapHub<NotificationHub>("/hubs/notifications");
     app.Run();
 }
 catch(Exception ex)

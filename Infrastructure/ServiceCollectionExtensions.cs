@@ -9,6 +9,7 @@ using Infrastructure.Services;
 using Infrastructure.Services.Notification.Email;
 using Infrastructure.Services.Notification.Reports;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -77,6 +78,9 @@ namespace Infrastructure
             services.AddScoped<IEmailNotificationService, EmailNotificationService>();
             services.AddScoped<IExcelReportGenerator, ExcelReportGenerator>();
 
+            // SignalR
+            services.AddSignalR();
+
             // Clerk Configuration
             var clerkAuthority = configuration["Clerk:Authority"];
             var clerkAudience = configuration["Clerk:Audience"];
@@ -95,7 +99,25 @@ namespace Infrastructure
                     ValidIssuer = clerkAuthority,
                     ValidateAudience = true,
                     ValidAudience = clerkAudience,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    NameClaimType = "sub"
+                };
+
+                // Soporte para WebSockets: extraer token desde query string
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
