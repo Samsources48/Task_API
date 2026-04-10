@@ -30,7 +30,7 @@ namespace Application.Features.Products.Operations
 
         public async Task<List<TasksDto>> GetAll(string idUser)
         {
-            var response = await taskRepository.GetAllAsync(x => x.Activo, x => x.User);
+            var response = await taskRepository.GetAllAsync(x => x.Activo && x.IdUser == long.Parse(idUser), x => x.User!);
             return TasksMapper.Map(response);
         }
 
