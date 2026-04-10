@@ -4,8 +4,8 @@ namespace Application.Features.Products.Interfaces
 {
     public interface ITasksOperation
     {
-        Task<TaskDashboard> GetTaskDasboard();
-        Task<List<TasksDto>> GetAll();
+        Task<TaskDashboard> GetTaskDasboard(string idUser);
+        Task<List<TasksDto>> GetAll(string idUser);
         Task<TasksDto> GetById(int id);
         Task<TasksDto> Create(SaveTasksDto dto);
         Task<TasksDto> Update(SaveTasksDto dto);

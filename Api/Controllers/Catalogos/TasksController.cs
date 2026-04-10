@@ -17,18 +17,18 @@ namespace Api.Controllers.Catalogos
         [HttpGet("Dashboard")]
         [ProducesResponseType(typeof(TaskDashboard), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<TaskDashboard>> GetTaskDasboard()
+        public async Task<ActionResult<TaskDashboard>> GetTaskDasboard([FromQuery] string idUser)
         {
-            var data = await _tasksOperation.GetTaskDasboard();
+            var data = await _tasksOperation.GetTaskDasboard(idUser);
             return Ok(data);
         }
 
         [HttpGet()]
         [ProducesResponseType(typeof(List<TasksDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<List<TasksDto>>> GetAll()
+        public async Task<ActionResult<List<TasksDto>>> GetAll([FromQuery]  string idUser)
         {
-            var data = await _tasksOperation.GetAll();
+            var data = await _tasksOperation.GetAll(idUser);
             return Ok(data);
         }
 

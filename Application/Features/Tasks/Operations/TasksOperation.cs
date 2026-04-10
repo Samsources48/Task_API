@@ -17,18 +17,18 @@ namespace Application.Features.Products.Operations
 {
     public class TasksOperation(ITaskItemRepository taskRepository, IRealTimeNotifier realTimeNotifier) : ITasksOperation
     {
-        public async Task<TaskDashboard> GetTaskDasboard()
+        public async Task<TaskDashboard> GetTaskDasboard(string idUser)
         {
-            var response = await taskRepository.GetAllAsync(x => x.Activo);
+            var response = await taskRepository.GetAllAsync(x => x.Activo && x.IdUser == long.Parse(idUser));
             return new TaskDashboard
             {
                 TotalTasks = response.Count(),
-                CompletedTasks = response.Count(x => x.IsCompleted == true),
+                CompletedTasks = response.Count(x => x.IsCompleted),
                 InProgressTasks = response.Count(x => x.IsCompleted == false),
             };
         }
 
-        public async Task<List<TasksDto>> GetAll()
+        public async Task<List<TasksDto>> GetAll(string idUser)
         {
             var response = await taskRepository.GetAllAsync(x => x.Activo, x => x.User);
             return TasksMapper.Map(response);
