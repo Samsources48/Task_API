@@ -37,14 +37,14 @@ namespace Application.Features.Products.Operations
         public async Task<TasksDto> GetById(int id)
         {
             var response = await taskRepository.GetByIdAsync(id);
-            if (response == null)
+            if (response is null)
                 throw new NotFoundException($"Task con ID {id} no encontrado");
             return TasksMapper.toDto(response);
         }
 
         public async Task<TasksDto> Create(SaveTasksDto dto)
         {
-            if (dto == null)
+            if (dto is null)
                 throw new BadRequestException("El objeto Task no puede ser nulo");
 
             var isCompleteTask = dto.Status == statusTasksEnum.Done;
@@ -54,7 +54,7 @@ namespace Application.Features.Products.Operations
 
             var created = await taskRepository.CreateAsync(producto);
 
-            if (created == null)
+            if (created is null)
                 throw new BadRequestException("No se pudo guardar el producto");
 
             return TasksMapper.toDto(created);
@@ -75,7 +75,7 @@ namespace Application.Features.Products.Operations
 
             var updated = await taskRepository.UpdateAsync(existing.IdTaskItem, updatedEntity);
 
-            if (updated == null)
+            if (updated is null)
                 throw new NotFoundException($"Task con ID {dto.IdTaskItem} no encontrado");
 
             // Notificar cambio de estado en tiempo real
@@ -98,7 +98,7 @@ namespace Application.Features.Products.Operations
             var existing = await taskRepository.GetByIdAsync(id)
                             ?? throw new NotFoundException("Tarea no Encontrada");
 
-            if (existing == null)
+            if (existing is null)
                 throw new NotFoundException($"Task con ID {id} no encontrado");
 
             await taskRepository.DeleteAsync(id);
