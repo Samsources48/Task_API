@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Domain.Entities.Tasks;
+using Domain.Enums;
 using Domain.utils;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace Application.Features.Mappings
             {
                 Title = dto.Title,
                 Description = dto.Description,
-                IsCompleted = false,
+                IsCompleted = dto.Status == statusTasksEnum.Done ? true : false,
                 Status = HelperEnumsConverter.statusTasksToString(dto.Status),
                 Priority = HelperEnumsConverter.priorityToString(dto.Priority),
                 IdTaskCategory = dto.IdTaskCategory,

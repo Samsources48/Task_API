@@ -47,6 +47,7 @@ namespace Application.DTOs
         public long? TotalTasks { get; set; }
         public long? CompletedTasks { get; set; }
         public long? InProgressTasks { get; set; }
+        public long? OverdueTasks { get; set; }
 
     }
 }

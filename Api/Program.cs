@@ -20,6 +20,7 @@ using Serilog;
 using System.Reflection;
 using System.Text.Json;
 using Infrastructure.Services.NotificationSignal;
+using Microsoft.AspNetCore.HttpOverrides;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -152,6 +153,11 @@ try
             options.OpenApiRoutePattern = "/openapi/v1.json";
         });
     }
+
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
 
     app.UseHttpsRedirection();
 

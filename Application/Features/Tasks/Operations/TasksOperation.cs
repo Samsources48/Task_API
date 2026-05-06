@@ -24,7 +24,8 @@ namespace Application.Features.Products.Operations
             {
                 TotalTasks = response.Count(),
                 CompletedTasks = response.Count(x => x.IsCompleted),
-                InProgressTasks = response.Count(x => x.IsCompleted == false),
+                InProgressTasks = response.Count(x =>x.Status == HelperEnumsConverter.IN_PROGRESS),
+                OverdueTasks = response.Count(x => x.Status == HelperEnumsConverter.IN_REVIEW)
             };
         }
 
@@ -47,11 +48,8 @@ namespace Application.Features.Products.Operations
             if (dto is null)
                 throw new BadRequestException("El objeto Task no puede ser nulo");
 
-            var isCompleteTask = dto.Status == statusTasksEnum.Done;
 
             var producto = TasksMapper.toEntity(dto);
-            producto.IsCompleted = isCompleteTask;
-
             var created = await taskRepository.CreateAsync(producto);
 
             if (created is null)
@@ -65,11 +63,8 @@ namespace Application.Features.Products.Operations
             var existing = await taskRepository.GetByIdAsync(dto.IdTaskItem.Value, x => x.User!)
                             ?? throw new NotFoundException("Tarea no Encontrada");
 
-            var isCompleteTask = dto.Status == statusTasksEnum.Done;
-
             var updatedEntity = TasksMapper.toEntity(dto);
             updatedEntity.IdTaskItem = dto.IdTaskItem.Value;
-            updatedEntity.IsCompleted = isCompleteTask;
 
             var statusChanged = existing.Status != updatedEntity.Status;
 
