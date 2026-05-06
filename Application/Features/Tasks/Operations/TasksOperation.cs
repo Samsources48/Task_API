@@ -8,6 +8,7 @@ using Domain;
 using Domain.Entities.seguridad;
 using Domain.Enums;
 using Domain.Interfaces.Tasks;
+using Domain.Models;
 using Domain.utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,23 @@ namespace Application.Features.Products.Operations
 {
     public class TasksOperation(ITaskItemRepository taskRepository, IRealTimeNotifier realTimeNotifier) : ITasksOperation
     {
+
+        public async Task<PagedResult<TasksDto>> GetFiltered(string idUser, DinamicFilters filters)
+        {
+            var item = await taskRepository.GetAllAsync(filters, query => query
+                             .Where(x => x.Activo && x.IdUser == long.Parse(idUser))
+                             .Include(x => x.User));
+
+            var count = await taskRepository.CountAsync(filters, x => x.Activo && x.IdUser == long.Parse(idUser));
+            
+            return new PagedResult<TasksDto>
+            {
+                Items = TasksMapper.Map(item),
+                TotalCount = count,
+                Page = filters.Page ?? 1,
+                PageSize = filters.PageSize ?? 10,
+            };
+        }
         public async Task<TaskDashboard> GetTaskDasboard(string idUser)
         {
             var response = await taskRepository.GetAllAsync(x => x.Activo && x.IdUser == long.Parse(idUser));
@@ -24,7 +42,7 @@ namespace Application.Features.Products.Operations
             {
                 TotalTasks = response.Count(),
                 CompletedTasks = response.Count(x => x.IsCompleted),
-                InProgressTasks = response.Count(x =>x.Status == HelperEnumsConverter.IN_PROGRESS),
+                InProgressTasks = response.Count(x => x.Status == HelperEnumsConverter.IN_PROGRESS),
                 OverdueTasks = response.Count(x => x.Status == HelperEnumsConverter.IN_REVIEW)
             };
         }

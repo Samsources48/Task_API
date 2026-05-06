@@ -1,5 +1,7 @@
 using Application.DTOs;
 using Application.Features.Products.Interfaces;
+using Application.Features.Products.Operations;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -13,6 +15,14 @@ namespace Api.Controllers.Catalogos
     [Produces("application/json")]
     public class TasksController(ILogger<TasksController> _logger, ITasksOperation _tasksOperation) : ControllerBase
     {
+
+        [HttpGet("filter")]
+        [ProducesResponseType(typeof(PagedResult<TasksDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetFiltered([FromQuery] string idUser, [FromQuery] DinamicFilters filters)
+        {
+            var result = await _tasksOperation.GetFiltered(idUser, filters);
+            return Ok(result);
+        }
 
         [HttpGet("Dashboard")]
         [ProducesResponseType(typeof(TaskDashboard), (int)HttpStatusCode.OK)]
