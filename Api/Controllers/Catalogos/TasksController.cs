@@ -16,11 +16,11 @@ namespace Api.Controllers.Catalogos
     public class TasksController(ILogger<TasksController> _logger, ITasksOperation _tasksOperation) : ControllerBase
     {
 
-        [HttpGet("filter")]
+        [HttpGet("Filter")]
         [ProducesResponseType(typeof(PagedResult<TasksDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetFiltered([FromQuery] string idUser, [FromQuery] DinamicFilters filters)
+        public async Task<IActionResult> GetFiltered([FromQuery] FilterTask data, [FromQuery] DinamicFilters filters)
         {
-            var result = await _tasksOperation.GetFiltered(idUser, filters);
+            var result = await _tasksOperation.GetFiltered(data, filters);
             return Ok(result);
         }
 

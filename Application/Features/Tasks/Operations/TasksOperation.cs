@@ -19,14 +19,16 @@ namespace Application.Features.Products.Operations
     public class TasksOperation(ITaskItemRepository taskRepository, IRealTimeNotifier realTimeNotifier) : ITasksOperation
     {
 
-        public async Task<PagedResult<TasksDto>> GetFiltered(string idUser, DinamicFilters filters)
+        public async Task<PagedResult<TasksDto>> GetFiltered(FilterTask data, DinamicFilters filters)
         {
             var item = await taskRepository.GetAllAsync(filters, query => query
-                             .Where(x => x.Activo && x.IdUser == long.Parse(idUser))
+                             .Where(x => x.Activo
+                                      && x.IdUser == long.Parse(data.IdUser)
+                                      && x.Status == HelperEnumsConverter.statusTasksToString(data.Status))
                              .Include(x => x.User));
 
-            var count = await taskRepository.CountAsync(filters, x => x.Activo && x.IdUser == long.Parse(idUser));
-            
+            var count = await taskRepository.CountAsync(filters, x => x.Activo && x.IdUser == long.Parse(data.IdUser));
+
             return new PagedResult<TasksDto>
             {
                 Items = TasksMapper.Map(item),

@@ -50,4 +50,10 @@ namespace Application.DTOs
         public long? OverdueTasks { get; set; }
 
     }
+
+    public class FilterTask
+    {
+        public string IdUser { get; set; }
+        public statusTasksEnum Status { get; set; }
+    }
 }

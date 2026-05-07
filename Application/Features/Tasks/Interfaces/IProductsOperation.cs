@@ -5,7 +5,7 @@ namespace Application.Features.Products.Interfaces
 {
     public interface ITasksOperation
     {
-        Task<PagedResult<TasksDto>> GetFiltered(string idUser, DinamicFilters filters);
+        Task<PagedResult<TasksDto>> GetFiltered(FilterTask data, DinamicFilters filters);
 
         Task<TaskDashboard> GetTaskDasboard(string idUser);
         Task<List<TasksDto>> GetAll(string idUser);

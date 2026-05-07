@@ -9,7 +9,7 @@ namespace Domain.Enums
     public enum statusTasksEnum
     {
         Todo = 1,
-        InProgress =2,
+        InProgress = 2,
         InReview = 3,
         Done = 4
     }
