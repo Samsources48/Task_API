@@ -1,4 +1,4 @@
-﻿using Domain.Enums;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +27,7 @@ namespace Domain.utils
                 statusTasksEnum.InProgress => IN_PROGRESS,
                 statusTasksEnum.InReview => IN_REVIEW,
                 statusTasksEnum.Done => DONE,
+                statusTasksEnum.All => string.Empty,
                 _ => throw new ArgumentException(nameof(enumData), $"Not expected enum value: {enumData}"),
             };
         }

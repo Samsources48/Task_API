@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+using Application.DTOs;
 using Application.Exceptions;
 using Application.Features.Mappings;
 using Application.Features.Notifications.DTOs;
@@ -21,11 +21,15 @@ namespace Application.Features.Products.Operations
 
         public async Task<PagedResult<TasksDto>> GetFiltered(FilterTask data, DinamicFilters filters)
         {
-            var item = await taskRepository.GetAllAsync(filters, query => query
-                             .Where(x => x.Activo
-                                      && x.IdUser == long.Parse(data.IdUser)
-                                      && x.Status == HelperEnumsConverter.statusTasksToString(data.Status))
-                             .Include(x => x.User));
+            var item = await taskRepository.GetAllAsync(filters, query =>
+            {
+                query = query.Where(x => x.Activo && x.IdUser == long.Parse(data.IdUser));
+
+                if (data.Status != statusTasksEnum.All)
+                    query = query.Where(x => x.Status == HelperEnumsConverter.statusTasksToString(data.Status));
+
+                return query.Include(x => x.User);
+            });
 
             var count = await taskRepository.CountAsync(filters, x => x.Activo && x.IdUser == long.Parse(data.IdUser));
 
