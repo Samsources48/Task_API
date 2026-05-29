@@ -21,6 +21,8 @@ using System.Reflection;
 using System.Text.Json;
 using Infrastructure.Services.NotificationSignal;
 using Microsoft.AspNetCore.HttpOverrides;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -32,7 +34,23 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog();
-    // Removed duplicate AddControllers
+
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.AddFixedWindowLimiter("StrictMode", limiterOptions =>
+        {
+            limiterOptions.PermitLimit = 50;
+            limiterOptions.Window = TimeSpan.FromMinutes(1);
+            limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+            limiterOptions.QueueLimit = 2;
+        });
+
+        options.OnRejected = async (context, token) =>
+        {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken: token);
+        };
+    });
 
     // Configuración de OpenAPI
     builder.Services.AddOpenApi(options =>
@@ -81,9 +99,22 @@ try
     {
         opc.AddDefaultPolicy(opcionesCORS =>
         {
-            opcionesCORS.SetIsOriginAllowed(_ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+            opcionesCORS.SetIsOriginAllowed(_ => true)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
         });
     });
+
+    //builder.Services.AddCors(options =>
+    //{
+    //    options.AddPolicy("PoliticaWebOficial", policy =>
+    //    {
+    //        policy.WithOrigins("https://www.tu-sitio-web.com", "https://tu-sitio-web.com") // Solo tus dominios
+    //              .AllowAnyMethod()  // Permitir GET, POST, PUT, etc.
+    //              .AllowAnyHeader(); // Permitir headers como 'Content-Type' o 'Authorization'
+    //    });
+    //});
 
 
     var app = builder.Build();
@@ -169,7 +200,7 @@ try
     app.MapHub<NotificationHub>("/hubs/notifications");
     app.Run();
 }
-catch(Exception ex)
+catch (Exception ex)
 {
     Log.Fatal(ex, "Application terminated unexpectedly");
     throw ex;

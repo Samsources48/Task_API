@@ -30,9 +30,7 @@ namespace Domain.Entities.Tasks
 
         public DateTime ChangedAt { get; set; }
 
-        /// <summary>
         /// Minutos que la tarea estuvo en PreviousStatus antes de este cambio.
-        /// </summary>
         public int? DurationMinutes { get; set; }
 
         [StringLength(500)]
