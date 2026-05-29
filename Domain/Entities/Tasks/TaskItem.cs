@@ -33,6 +33,8 @@ namespace Domain.Entities.Tasks
 
         [DeleteBehavior(DeleteBehavior.NoAction)]
         public virtual User? User { get; set; }
+
+        public virtual ICollection<TaskHistory> TaskHistories { get; set; } = [];
     }
 }
 

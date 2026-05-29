@@ -11,6 +11,7 @@ namespace Domain
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<TaskItem> TaskItems { get; set; }
         public virtual DbSet<TaskCategory> TaskCategories { get; set; }
+        public virtual DbSet<TaskHistory> TaskHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +52,20 @@ namespace Domain
                     .WithOne(p => p.TaskCategory)
                     .HasForeignKey(d => d.IdTaskCategory)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<TaskHistory>(entity =>
+            {
+                entity.ToTable("TaskHistory", "Tasks");
+                entity.HasKey(e => e.IdTaskHistory);
+                entity.HasOne(d => d.TaskItem)
+                    .WithMany(p => p.TaskHistories)
+                    .HasForeignKey(d => d.IdTaskItem)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
         }
     }

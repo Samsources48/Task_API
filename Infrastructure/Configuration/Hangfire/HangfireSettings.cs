@@ -11,7 +11,7 @@ namespace Infrastructure.Configuration.Hangfire
 
         public const string SectionName = "Hangfire";
         //# de workers que se ejecutarán en paralelo. Por defecto, Hangfire asigna 20 workers.
-        public int WorkerCount { get; set; }
+        public int WorkerCount { get; set; } = 1;
         //public int MaxWorkerCount { get; set; }
         public string ServerName { get; set; } = "TrackingServer";
         public bool EnableDashboard { get; set; } = true;

@@ -30,8 +30,6 @@
 .DS_Store?
 
 # Config & Sensitive Data
-appsettings.json
-appsettings.Development.json
 local.settings.json
 *.env
 appsettings.*.json
