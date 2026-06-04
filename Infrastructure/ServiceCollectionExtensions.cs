@@ -100,7 +100,7 @@ namespace Infrastructure
                 {
                     ValidateIssuer = true,
                     ValidIssuer = clerkAuthority,
-                    ValidateAudience = true,
+                    ValidateAudience = !string.IsNullOrEmpty(clerkAudience),
                     ValidAudience = clerkAudience,
                     ValidateLifetime = true,
                     NameClaimType = "sub"
@@ -119,6 +119,19 @@ namespace Infrastructure
                             context.Token = accessToken;
                         }
 
+                        return Task.CompletedTask;
+                    },
+
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"[JWT] Authentication FAILED: {context.Exception.GetType().Name} - {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    },
+
+                    OnTokenValidated = context =>
+                    {
+                        var sub = context.Principal?.FindFirst("sub")?.Value;
+                        Console.WriteLine($"[JWT] Token VALIDATED for sub: {sub}");
                         return Task.CompletedTask;
                     }
                 };
