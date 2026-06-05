@@ -10,6 +10,10 @@ appsettings.Development.json
 .vs/
 .vscode/
 
+*.md
+*.atl
+.openspec
+
 # Compiled Binary Files
 *.dll
 *.exe

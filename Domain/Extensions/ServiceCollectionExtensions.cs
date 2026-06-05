@@ -15,6 +15,7 @@ namespace Domain.Extensions
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ITaskItemRepository, TaskItemRepository>();
             services.AddScoped<ITaskCategoryRepository, TaskCategoryRepository>();
+            services.AddScoped<ITaskHistoryRepository, TaskHistoryRepository>();
 
             return services;
         }

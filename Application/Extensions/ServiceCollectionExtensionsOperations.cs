@@ -17,8 +17,9 @@ namespace Application.Extensions
             services.AddScoped<IUsuariosOperation, UsuariosOperation>();
             services.AddScoped<IRolesOperation, RolesOperation>();
             services.AddScoped<IUserSyncService, UserSyncService>();
-            services.AddScoped<ITasksOperation, TasksOperation>();    
+            services.AddScoped<ITasksOperation, TasksOperation>();
             services.AddScoped<ITaskCategoryOperation, TaskCategoryOperation>();
+            services.AddScoped<ITaskHistoryOperation, TaskHistoryOperation>();
 
             services.AddDataAccessServices();
             return services;
