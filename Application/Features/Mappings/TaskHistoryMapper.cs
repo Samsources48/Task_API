@@ -34,7 +34,7 @@ namespace Application.Features.Mappings
                 IdUser = dto.IdUser,
                 PreviousStatus = dto.PreviousStatus.toStringStatus(),
                 NewStatus = dto.NewStatus.toStringStatus(),
-                ChangedAt = dto.ChangedAt ?? DateTime.UtcNow,
+                ChangedAt = dto.ChangedAt ?? DateTime.Now,
                 DurationMinutes = dto.DurationMinutes,
                 Remarks = dto.Remarks,
                 Activo = true
@@ -52,7 +52,7 @@ namespace Application.Features.Mappings
                 IdUser = dto.IdUser,
                 PreviousStatus = dto.PreviousStatus.toStringStatus(),
                 NewStatus = dto.NewStatus.toStringStatus(),
-                ChangedAt = dto.ChangedAt ?? DateTime.UtcNow,
+                ChangedAt = dto.ChangedAt ?? DateTime.Now,
                 DurationMinutes = dto.DurationMinutes,
                 Remarks = dto.Remarks,
                 Activo = true

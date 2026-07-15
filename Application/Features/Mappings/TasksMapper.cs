@@ -41,7 +41,7 @@ namespace Application.Features.Mappings
             {
                 Title = dto.Title,
                 Description = dto.Description,
-                IsCompleted = dto.Status != statusTasksEnum.Done,
+                IsCompleted = dto.Status == statusTasksEnum.Done,
                 Status = HelperEnumsConverter.statusTasksToString(dto.Status),
                 Priority = HelperEnumsConverter.priorityToString(dto.Priority),
                 IdTaskCategory = dto.IdTaskCategory,

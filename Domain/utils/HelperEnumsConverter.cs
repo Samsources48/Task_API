@@ -13,6 +13,7 @@ namespace Domain.utils
         public const string IN_PROGRESS = "En progreso";
         public const string IN_REVIEW = "En revicion";
         public const string DONE = "Hecho";
+        public const string PAUSED = "Pausado";
 
         public const string LOW = "Baja";
         public const string MEDIUM = "Media";
@@ -27,6 +28,7 @@ namespace Domain.utils
                 statusTasksEnum.InProgress => IN_PROGRESS,
                 statusTasksEnum.InReview => IN_REVIEW,
                 statusTasksEnum.Done => DONE,
+                statusTasksEnum.Paused => PAUSED,
                 statusTasksEnum.All => string.Empty,
                 _ => throw new ArgumentException(nameof(enumData), $"Not expected enum value: {enumData}"),
             };
@@ -39,6 +41,7 @@ namespace Domain.utils
                 TODO => statusTasksEnum.Todo,
                 IN_PROGRESS => statusTasksEnum.InProgress,
                 IN_REVIEW => statusTasksEnum.InReview,
+                PAUSED => statusTasksEnum.Paused,
                 DONE => statusTasksEnum.Done,
                 _ => throw new ArgumentException(nameof(stringData), $"Not expected string value: {stringData}"),
             };
